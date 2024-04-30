@@ -10,7 +10,7 @@ const apiKey: string = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 
 const stripePromise = loadStripe(apiKey);
 
-export default function App() {
+export default function Payment() {
   const fetchClientSecret = useCallback( async () => {
     // Create a Checkout Session
     const response = await fetch("/api/checkout_sessions", {
