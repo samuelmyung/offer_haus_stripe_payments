@@ -1,30 +1,35 @@
-import Stripe from "stripe";
+'use client'
+import React, { useCallback } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+import {
+  EmbeddedCheckoutProvider,
+  EmbeddedCheckout
+} from '@stripe/react-stripe-js';
 
+const apiKey: string = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 
-import React from "react";
+const stripePromise = loadStripe(apiKey);
 
-const api_key: string = process.env.TEST_API_KEY!;
-const stripe = new Stripe(api_key);
+export default function App() {
+  const fetchClientSecret = useCallback(() => {
+    // Create a Checkout Session
+    return fetch("/api/checkout_sessions", {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((data) => data.clientSecret);
+  }, []);
 
-export async function Payment() {
+  const options = {fetchClientSecret};
 
-    const session = await stripe.checkout.sessions.create({
-        line_items: [{
-            price_data: {
-                currency: 'usd',
-                product_data: {
-                    name: 'T-shirt',
-                },
-                unit_amount: 2000,
-            },
-            quantity: 1,
-        }],
-        mode: 'payment',
-        ui_mode: 'embedded',
-        return_url: 'https://example.com/checkout/return?session_id={CHECKOUT_SESSION_ID}'
-    });
-
-    return (
-
-    );
+  return (
+    <div id="checkout">
+      <EmbeddedCheckoutProvider
+        stripe={stripePromise}
+        options={options}
+      >
+        <EmbeddedCheckout />
+      </EmbeddedCheckoutProvider>
+    </div>
+  )
 }
