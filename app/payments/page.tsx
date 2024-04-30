@@ -11,13 +11,14 @@ const apiKey: string = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 const stripePromise = loadStripe(apiKey);
 
 export default function App() {
-  const fetchClientSecret = useCallback(() => {
+  const fetchClientSecret = useCallback( async () => {
     // Create a Checkout Session
-    return fetch("/api/checkout_sessions", {
+    const response = await fetch("/api/checkout_sessions", {
       method: "POST",
     })
-      .then((res) => res.json())
-      .then((data) => data.clientSecret);
+
+    const data = await response.json();
+    return data.clientSecret;
   }, []);
 
   const options = {fetchClientSecret};
