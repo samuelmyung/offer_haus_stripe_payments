@@ -1,34 +1,35 @@
-import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe'
+// import { NextResponse } from 'next/server';
+// import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-/** Post route that creates a Checkout Session and returns a client secret, which
- * is a key that is unique to the individual payment intent
- */
-export async function POST() {
-  try {
-    // Create Checkout Sessions from body params.
-    const session = await stripe.checkout.sessions.create({
-      ui_mode: 'embedded',
-      line_items: [
-        {
-          // Provide the exact Price ID (for example, pr_1234) of
-          // the product you want to sell
-          price: process.env.PRICE_ID,
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      return_url:
-        `http://localhost:3000/return?session_id={CHECKOUT_SESSION_ID}`,
-    });
+// /** Post route that creates a Checkout Session and returns a client secret, which
+//  * is a key that is unique to the individual payment intent
+//  */
+// export async function POST() {
+//   try {
+//     // Create Checkout Sessions from body params.
+//     const session = await stripe.checkout.sessions.create({
+//       // customer: '{{CUSTOMER_ID}}',
+//       ui_mode: 'embedded',
+//       line_items: [
+//         {
+//           // Provide the exact Price ID (for example, pr_1234) of
+//           // the product you want to sell
+//           price: process.env.PRICE_ID,
+//           quantity: 1,
+//         },
+//       ],
+//       mode: 'payment',
+//       return_url:
+//         `http://localhost:3000/return?session_id={CHECKOUT_SESSION_ID}`,
+//     });
 
-    return NextResponse.json({ clientSecret: session.client_secret });
-  } catch (err) {
-    return NextResponse.json({ err }, { status: 500 });
-  }
-}
+//     return NextResponse.json({ clientSecret: session.client_secret });
+//   } catch (err) {
+//     return NextResponse.json({ err }, { status: 500 });
+//   }
+// }
 
 // Left for reference of API method
 /** Get route that retrieves a Checkout Session based on its session id and
