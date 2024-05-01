@@ -1,31 +1,20 @@
-// "use client";
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { redirect } from 'next/navigation';
-import { NextRequest, NextResponse } from 'next/server';
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-export default async function Return(data: { searchParams: { session_id: string }}) {
-    // const [status, setStatus] = useState(null);
-    // const [customerEmail, setCustomerEmail] = useState('');
+/** Retrieves Checkout Session data through a session id and based on the status property
+ * either returns a redirect or displays a payment success page
+ */
+export default async function Return(data: { searchParams: { session_id: string; }; }) {
 
-    // useEffect(function fetchingPaymentSessionDataOnMount() {
-    // async function fetchingPaymentSessionData() {
-        // const queryString = window.location.search;
-        const sessionId = data.searchParams.session_id;
-        // const urlParams = new URLSearchParams(queryString);
-        // const sessionId = queryString.get('session_id');
-
-        const response = await fetch(`http://localhost:3000/api/checkout_sessions?session_id=${sessionId}`, {
-            method: "GET",
-        });
-        const sessionData = await response.json();
-        // setStatus(data.status);
-        // setCustomerEmail(data.customer_email);
-
-    // fetchingPaymentSessionData();
-    // }, []);
-
-
+    const sessionId = data.searchParams.session_id;
+    const sessionData = await stripe.checkout.sessions.retrieve(sessionId);
+    console.log("####################", sessionData)
+    // const response = await fetch(`http://localhost:3000/api/checkout_sessions?session_id=${sessionId}`, {
+    //     method: "GET",
+    // });
+    // const sessionData = await response.json();
 
     if (sessionData!.status === 'open') {
         return (
