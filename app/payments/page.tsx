@@ -1,5 +1,6 @@
 'use client';
-import React, { useCallback } from 'react';
+
+import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {
   EmbeddedCheckoutProvider,

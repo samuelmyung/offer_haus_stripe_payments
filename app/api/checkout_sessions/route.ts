@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+import Stripe from 'stripe'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 /** Post route that creates a Checkout Session and returns a client secret, which
  * is a key that is unique to the individual payment intent
@@ -24,11 +26,11 @@ export async function POST() {
 
     return NextResponse.json({ clientSecret: session.client_secret });
   } catch (err) {
-    return NextResponse.json({ err: "Failed" }, { status: 500 });
+    return NextResponse.json({ err }, { status: 500 });
   }
 }
 
-
+// Left for reference of API method
 /** Get route that retrieves a Checkout Session based on its session id and
  * returns the status and customer_email properties of the Checkout Session
  * object
