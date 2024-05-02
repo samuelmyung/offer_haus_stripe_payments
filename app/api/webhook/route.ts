@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     }
     case 'charge.succeeded': {
       const charge = event.data.object;
-      console.log(`Charge id: ${charge.id}`);
+      console.log(`Charge id:`, charge);
       break;
     }
     default: {
